@@ -1,0 +1,58 @@
+cmake_minimum_required(VERSION 3.20)
+
+project(libstgx
+  VERSION 0.1.0
+  DESCRIPTION "State Transition Graph eXtended — build, edit, validate state graphs"
+  LANGUAGES CXX
+)
+
+include(cmake/ProjectSettings.cmake)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+option(STGX_BUILD_TESTS "Build unit tests" ON)
+option(STGX_ENABLE_CLANG_TIDY "Enable clang-tidy on stgx targets" OFF)
+
+# --- dependencies -----------------------------------------------------------
+
+add_subdirectory(thirdparty)
+
+# --- library ----------------------------------------------------------------
+
+file(GLOB_RECURSE libstg_sources
+  CONFIGURE_DEPENDS
+  src/*.cpp
+)
+
+add_library(stgx ${libstg_sources})
+add_library(stgx::stgx ALIAS stgx)
+
+target_include_directories(stgx
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(stgx
+  PRIVATE
+    yaml-cpp::yaml-cpp
+)
+
+target_compile_features(stgx PUBLIC cxx_std_20)
+target_compile_options(stgx PRIVATE -Wall -Wextra -Wpedantic)
+
+if(STGX_ENABLE_CLANG_TIDY)
+  find_program(CLANG_TIDY_EXE NAMES clang-tidy REQUIRED)
+  set_target_properties(stgx PROPERTIES
+    CXX_CLANG_TIDY "${CLANG_TIDY_EXE};--config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy"
+  )
+endif()
+
+# --- tests ------------------------------------------------------------------
+
+if(STGX_BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(tests)
+endif()

@@ -1,0 +1,26 @@
+{
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.sourceDirectory": "${workspaceFolder}",
+    "cmake.configureArgs": [
+    ],
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "testExplorer.useNativeTesting": true,
+
+    "[cpp]": {
+        "editor.defaultFormatter": "xaver.clang-format",
+        "editor.formatOnSave": true
+    },
+    "[c]": {
+        "editor.defaultFormatter": "xaver.clang-format",
+        "editor.formatOnSave": true
+    },
+    "clang-format.style": "file",
+    "clang-format.fallbackStyle": "Google",
+    "clangd.arguments": [
+        "--clang-tidy",
+        "--background-index",
+        "--completion-style=detailed",
+        "--header-insertion=iwyu",
+        "--fallback-style=google"
+    ],
+}

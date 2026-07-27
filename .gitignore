@@ -1,0 +1,18 @@
+.db/
+
+# Build
+.build/
+bin/
+build/
+cmake-build-*/
+out/
+.vscode/compile_commands.json
+
+# IDE / editor
+*.swp
+*.swo
+*~
+.DS_Store
+
+# clangd
+.cache/
