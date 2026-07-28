@@ -10,8 +10,12 @@ add_executable(stgx_tests ${stgx_test_sources})
 target_link_libraries(stgx_tests
   PRIVATE
     stgx::stgx
-    Catch2::Catch2WithMain
+    Catch2::Catch2
 )
 
-include(Catch)
-catch_discover_tests(stgx_tests)
+include(Catch OPTIONAL RESULT_VARIABLE STGX_CATCH_MODULE)
+if(STGX_CATCH_MODULE)
+  catch_discover_tests(stgx_tests)
+else()
+  add_test(NAME stgx_tests COMMAND stgx_tests)
+endif()
