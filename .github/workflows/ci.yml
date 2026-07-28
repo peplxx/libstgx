@@ -1,0 +1,98 @@
+name: libstgx
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  style:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install clang-tidy and Ninja
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-tidy ninja-build
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Run pre-commit
+        run: pre-commit run --all-files --show-diff-on-failure
+
+      - uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: "3.30.0"
+
+      - name: Configure for clang-tidy
+        run: |
+          cmake -B build-lint -S . \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DSTGX_BUILD_TESTS=OFF \
+            -DSTGX_ENABLE_CLANG_TIDY=ON
+
+      - name: Build with clang-tidy
+        run: cmake --build build-lint -j "$(nproc)"
+
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: "3.30.0"
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential ninja-build
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ runner.os }}-ccache-${{ hashFiles('**/CMakeLists.txt', 'src/**', 'include/**', 'tests/**') }}
+          restore-keys: |
+            ${{ runner.os }}-ccache-
+          max-size: 500M
+
+      - name: Configure
+        run: |
+          cmake -B build -S . \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DSTGX_BUILD_TESTS=ON \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+      - name: Build
+        run: cmake --build build -j "$(nproc)"
+
+      - name: Test
+        run: |
+          ctest --test-dir build \
+            --output-on-failure \
+            --verbose \
+            -j "$(nproc)"
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: build/Testing/

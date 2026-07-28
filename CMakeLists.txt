@@ -44,11 +44,19 @@ target_compile_features(stgx PUBLIC cxx_std_20)
 target_compile_options(stgx PRIVATE -Wall -Wextra -Wpedantic)
 
 if(STGX_ENABLE_CLANG_TIDY)
-  find_program(CLANG_TIDY_EXE NAMES clang-tidy REQUIRED)
+  find_program(CLANG_TIDY_EXE
+    NAMES clang-tidy
+    HINTS
+      "$ENV{HOMEBREW_PREFIX}/opt/llvm/bin"
+      /opt/homebrew/opt/llvm/bin
+      /usr/local/opt/llvm/bin
+    REQUIRED
+  )
   set_target_properties(stgx PROPERTIES
     CXX_CLANG_TIDY "${CLANG_TIDY_EXE};--config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy"
   )
 endif()
+
 
 # --- tests ------------------------------------------------------------------
 

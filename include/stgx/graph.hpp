@@ -3,8 +3,8 @@
 namespace stgx {
 
 class Graph {
-public:
+ public:
   Graph() = default;
 };
 
-} // namespace stgx
+}  // namespace stgx

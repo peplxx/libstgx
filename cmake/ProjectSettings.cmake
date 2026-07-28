@@ -17,11 +17,16 @@ endif()
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 file(MAKE_DIRECTORY "${CMAKE_SOURCE_DIR}/.vscode")
+set(_stgx_compile_commands_link "${CMAKE_SOURCE_DIR}/.vscode/compile_commands.json")
+if(EXISTS "${_stgx_compile_commands_link}" OR IS_SYMLINK "${_stgx_compile_commands_link}")
+  file(REMOVE "${_stgx_compile_commands_link}")
+endif()
 file(CREATE_LINK
   "${CMAKE_BINARY_DIR}/compile_commands.json"
-  "${CMAKE_SOURCE_DIR}/.vscode/compile_commands.json"
+  "${_stgx_compile_commands_link}"
   SYMBOLIC
 )
+
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

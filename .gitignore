@@ -2,8 +2,10 @@
 
 # Build
 .build/
+.build-lint/
 bin/
 build/
+build-lint/
 cmake-build-*/
 out/
 .vscode/compile_commands.json

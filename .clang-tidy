@@ -34,6 +34,7 @@ Checks: >
   -performance-noexcept-move-constructor,
   -performance-no-int-to-ptr,
   portability-*,
+  -portability-avoid-pragma-once,
   readability-*,
   -readability-braces-around-statements,
   -readability-function-cognitive-complexity,
