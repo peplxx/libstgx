@@ -10,7 +10,7 @@
 </div>
 
 **S**tate **T**ransition **G**raph e**X**tended — a C++ library for building, editing and
-validating state-transition graphs of real-time task systems.
+validating state-transition graphs of schedules for real-time systems.
 
 ---
 
