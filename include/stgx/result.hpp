@@ -2,6 +2,10 @@
 
 #include <expected>
 
+#ifndef __cpp_lib_expected
+#error "libstgx needs std::expected: build as C++23 with a toolchain that provides <expected>."
+#endif
+
 #include <stgx/diagnostics.hpp>
 
 namespace stgx {

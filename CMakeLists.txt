@@ -18,6 +18,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(STGX_BUILD_TESTS "Build unit tests" ${PROJECT_IS_TOP_LEVEL})
 option(STGX_BUILD_EXAMPLES "Build examples" OFF)
 option(STGX_ENABLE_CLANG_TIDY "Enable clang-tidy on stgx targets" OFF)
+set(STGX_CLANG_TIDY "" CACHE STRING "clang-tidy executable to use (name or full path)")
 
 # --- dependencies
 
@@ -53,7 +54,10 @@ set_target_properties(stgx PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 if(STGX_ENABLE_CLANG_TIDY)
   find_program(CLANG_TIDY_EXE
-    NAMES clang-tidy
+    NAMES
+      ${STGX_CLANG_TIDY}
+      clang-tidy-22 clang-tidy-21 clang-tidy-20 clang-tidy-19
+      clang-tidy
     HINTS
       "$ENV{HOMEBREW_PREFIX}/opt/llvm/bin"
       /opt/homebrew/opt/llvm/bin

@@ -140,7 +140,8 @@ class Graph {
   IdMap<std::size_t> node_index_;
   IdMap<EdgeRange> out_index_;
 
-  [[nodiscard]] Result<void> mutate_node(std::string_view id, std::function<void(Node&)> mutation);
+  [[nodiscard]] Result<void> mutate_node(std::string_view id,
+                                         const std::function<void(Node&)>& mutation);
 };
 
 }  // namespace stgx

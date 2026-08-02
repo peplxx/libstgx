@@ -18,7 +18,7 @@
 
 namespace stgx {
 
-Result<void> Graph::mutate_node(std::string_view id, std::function<void(Node&)> mutation) {
+Result<void> Graph::mutate_node(std::string_view id, const std::function<void(Node&)>& mutation) {
   Node* node = find_node_mut(id);
   if (node == nullptr) {
     return fail(diag::node_not_found(id));
