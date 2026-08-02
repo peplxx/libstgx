@@ -17,6 +17,7 @@ Checks: >
   -cppcoreguidelines-avoid-magic-numbers,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-pro-bounds-avoid-unchecked-container-access,
   -cppcoreguidelines-pro-bounds-constant-array-index,
   -cppcoreguidelines-pro-bounds-pointer-arithmetic,
   -cppcoreguidelines-pro-type-reinterpret-cast,
@@ -43,10 +44,13 @@ Checks: >
   -readability-magic-numbers,
   -readability-named-parameter,
   -readability-uppercase-literal-suffix,
-  -readability-use-anyofallof
+  -readability-use-anyofallof,
+  -cppcoreguidelines-avoid-do-while
 
 WarningsAsErrors: ''
-HeaderFilterRegex: 'include/stgx/|src/'
+# Anchor `src` so that fetched dependencies (`_deps/yaml-cpp-src/include/...`)
+# do not match on the bare substring.
+HeaderFilterRegex: 'include/stgx/|(^|/)src/'
 FormatStyle: file
 CheckOptions:
   - key: readability-identifier-naming.ClassCase
@@ -73,9 +77,21 @@ CheckOptions:
     value: _
   - key: readability-identifier-naming.ProtectedMemberSuffix
     value: _
+  # Local constants read like variables; only the ones with static storage or
+  # constexpr namespace scope carry the k prefix.
   - key: readability-identifier-naming.ConstantCase
     value: lower_case
-  - key: readability-identifier-naming.ConstantPrefix
+  - key: readability-identifier-naming.GlobalConstantCase
+    value: CamelCase
+  - key: readability-identifier-naming.GlobalConstantPrefix
+    value: k
+  - key: readability-identifier-naming.StaticConstantCase
+    value: CamelCase
+  - key: readability-identifier-naming.StaticConstantPrefix
+    value: k
+  - key: readability-identifier-naming.ConstexprVariableCase
+    value: CamelCase
+  - key: readability-identifier-naming.ConstexprVariablePrefix
     value: k
   - key: modernize-use-nullptr.NullMacros
     value: 'NULL'

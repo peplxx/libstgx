@@ -1,0 +1,7 @@
+# The project writes a compile_commands.json into every build tree and points
+# .vscode/compile_commands.json at whichever one was configured last. The lint
+# tree (build-lint) is configured with STGX_BUILD_TESTS=OFF, so whenever it wins
+# that race the editor knows nothing about tests/ — no completion, no headers.
+# Pin clangd to the tree that has both the library and the tests.
+CompileFlags:
+  CompilationDatabase: build
