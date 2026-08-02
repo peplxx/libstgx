@@ -1,3 +1,13 @@
+# Developer-only settings for a top-level libstgx build. Every one of these
+# reaches outside the project's own scope — the source tree, the cache, global
+# properties — so the caller only includes this file when PROJECT_IS_TOP_LEVEL.
+
+configure_file(
+  "${PROJECT_SOURCE_DIR}/.clangd.in"
+  "${PROJECT_SOURCE_DIR}/.clangd"
+  @ONLY
+)
+
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     message(STATUS "Setting build type to 'RelWithDebInfo' as none was specified.")
     set(CMAKE_BUILD_TYPE

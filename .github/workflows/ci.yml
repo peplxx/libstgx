@@ -15,6 +15,9 @@ jobs:
   style:
     runs-on: ubuntu-latest
 
+    env:
+      LLVM_VERSION: "21"
+
     steps:
       - uses: actions/checkout@v4
 
@@ -25,7 +28,18 @@ jobs:
       - name: Install clang-tidy and Ninja
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-tidy ninja-build
+          sudo apt-get install -y ninja-build lsb-release wget software-properties-common gnupg
+          wget -q https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh "$LLVM_VERSION"
+          sudo apt-get install -y "clang-tidy-$LLVM_VERSION"
+
+      - name: Report toolchain
+        run: |
+          "clang++-$LLVM_VERSION" --version
+          "clang-tidy-$LLVM_VERSION" --version
+          "clang++-$LLVM_VERSION" -std=c++23 -x c++ -E -dM /dev/null \
+            | grep -E '__cplusplus|__cpp_concepts'
 
       - name: Install pre-commit
         run: pip install pre-commit
@@ -42,8 +56,10 @@ jobs:
           cmake -B build-lint -S . \
             -G Ninja \
             -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_CXX_COMPILER="clang++-$LLVM_VERSION" \
             -DSTGX_BUILD_TESTS=OFF \
-            -DSTGX_ENABLE_CLANG_TIDY=ON
+            -DSTGX_ENABLE_CLANG_TIDY=ON \
+            -DSTGX_CLANG_TIDY="clang-tidy-$LLVM_VERSION"
 
       - name: Build with clang-tidy
         run: cmake --build build-lint -j "$(nproc)"

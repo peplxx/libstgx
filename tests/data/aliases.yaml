@@ -1,0 +1,17 @@
+# release aliases, the legacy isInitial spelling, and omitted fields
+nodes:
+  - id: a
+    isInitial: true
+    tasks:
+      - { c: 1, d: 3, release: ↑ }
+      - { d: 2 }
+    children: [b, c]
+  - id: b
+    tasks:
+      - { c: 0, d: 2, release: ↓ }
+      - { c: 0, d: 0, release: none }
+    loopback: [a]
+  - id: c
+    tasks:
+      - { c: 1, d: 3, release: 1 }
+      - { c: 2, d: 4, release: -1 }

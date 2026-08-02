@@ -1,0 +1,9 @@
+system:
+  tasks:
+    - {c: 1, d: 2}
+    - {c: 1, d: 2}
+nodes:
+  - id: n0
+    initial: true
+    tasks:
+      - {c: 0, d: 0}

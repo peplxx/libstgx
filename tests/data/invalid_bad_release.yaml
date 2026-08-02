@@ -1,0 +1,5 @@
+nodes:
+  - id: n0
+    initial: true
+    tasks:
+      - {c: 1, d: 2, release: sideways}

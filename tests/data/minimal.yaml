@@ -1,0 +1,4 @@
+schemaVersion: 1
+nodes:
+  - id: n0
+    initial: true

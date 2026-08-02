@@ -5,3 +5,5 @@
 # Pin clangd to the tree that has both the library and the tests.
 CompileFlags:
   CompilationDatabase: build
+  Add:
+    - -I@CMAKE_CURRENT_SOURCE_DIR@/include

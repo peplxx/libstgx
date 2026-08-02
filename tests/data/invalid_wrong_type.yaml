@@ -1,0 +1,4 @@
+nodes:
+  - id: n0
+    initial: maybe
+    children: n1

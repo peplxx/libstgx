@@ -1,0 +1,16 @@
+schemaVersion: 1
+nodes:
+  - id: n0
+    initial: true
+    borderColor: "#C0392B"
+    fillColor: "#E8F4F8"
+    hatch: single
+    metadata: { origin: solver }
+    children: [n1]
+  - id: n1
+    dangerouslyUnknown: 42
+areas:
+  - id: burst
+    nodes: [n0, n1]
+layout:
+  algorithm: concentric
