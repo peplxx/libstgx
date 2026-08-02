@@ -13,6 +13,11 @@ target_link_libraries(stgx_tests
     Catch2::Catch2
 )
 
+target_compile_definitions(stgx_tests
+  PRIVATE
+    STGX_TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data"
+)
+
 include(Catch OPTIONAL RESULT_VARIABLE STGX_CATCH_MODULE)
 if(STGX_CATCH_MODULE)
   catch_discover_tests(stgx_tests)

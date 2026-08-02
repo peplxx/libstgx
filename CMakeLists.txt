@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.21)
 
 project(libstgx
   VERSION 0.1.0
@@ -6,21 +6,24 @@ project(libstgx
   LANGUAGES CXX
 )
 
-include(cmake/ProjectSettings.cmake)
+# Developer conveniences
+if(PROJECT_IS_TOP_LEVEL)
+  include(cmake/ProjectSettings.cmake)
+endif()
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-option(STGX_BUILD_TESTS "Build unit tests" ON)
+option(STGX_BUILD_TESTS "Build unit tests" ${PROJECT_IS_TOP_LEVEL})
 option(STGX_BUILD_EXAMPLES "Build examples" OFF)
 option(STGX_ENABLE_CLANG_TIDY "Enable clang-tidy on stgx targets" OFF)
 
-# --- dependencies -----------------------------------------------------------
+# --- dependencies
 
 add_subdirectory(thirdparty)
 
-# --- library ----------------------------------------------------------------
+# --- library
 
 file(GLOB_RECURSE libstg_sources
   CONFIGURE_DEPENDS
@@ -44,6 +47,10 @@ target_link_libraries(stgx
 target_compile_features(stgx PUBLIC cxx_std_23)
 target_compile_options(stgx PRIVATE -Wall -Wextra -Wpedantic)
 
+# Carried on the target rather than picked up from ProjectSettings.cmake, so it
+# also holds when a consumer links stgx into a shared library.
+set_target_properties(stgx PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 if(STGX_ENABLE_CLANG_TIDY)
   find_program(CLANG_TIDY_EXE
     NAMES clang-tidy
@@ -59,14 +66,14 @@ if(STGX_ENABLE_CLANG_TIDY)
 endif()
 
 
-# --- examples ---------------------------------------------------------------
+# --- examples
 
 if(STGX_BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
 
-# --- tests ------------------------------------------------------------------
+# --- tests
 
 if(STGX_BUILD_TESTS)
   enable_testing()

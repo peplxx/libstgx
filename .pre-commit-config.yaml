@@ -19,6 +19,8 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
+        exclude: ^tests/data/invalid_bad_yaml\.yaml$
+
       - id: check-added-large-files
       - id: check-merge-conflict
       - id: mixed-line-ending

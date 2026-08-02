@@ -1,0 +1,25 @@
+schemaVersion: 1
+system:
+  description: EDF feasibility graph
+  m: 1
+  tasks:
+    - {c: 2, d: 5, name: τ₁}
+    - {c: 3, d: 7, name: τ₂}
+nodes:
+  - id: n00
+    initial: true
+    tasks:
+      - {c: 0, d: 0}
+      - {c: 0, d: 0}
+    children: [n10, n20]
+  - id: n10
+    tasks:
+      - {c: 2, d: 5, release: up}
+      - {c: 0, d: 0}
+    children: [n20]
+  - id: n20
+    label: "custom: label"
+    tasks:
+      - {c: 0, d: 3, release: down}
+      - {c: 0, d: 0}
+    loopback: [n00]
