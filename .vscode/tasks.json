@@ -1,0 +1,149 @@
+{
+    "version": "2.0.0",
+    "options": {
+        "cwd": "${workspaceFolder}"
+    },
+    "tasks": [
+        {
+            "label": "configure",
+            "detail": "cmake -B build (Debug, tests on)",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-B",
+                "build",
+                "-S",
+                ".",
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DSTGX_BUILD_TESTS=ON"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared",
+                "clear": true
+            }
+        },
+        {
+            "label": "build",
+            "detail": "Build the library and the tests",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build",
+                "-j"
+            ],
+            "dependsOn": "configure",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true
+            }
+        },
+        {
+            "label": "test",
+            "detail": "Build, then run ctest",
+            "type": "shell",
+            "command": "ctest",
+            "args": [
+                "--test-dir",
+                "build",
+                "--output-on-failure"
+            ],
+            "dependsOn": "build",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true
+            }
+        },
+        {
+            // Separate build tree: clang-tidy runs as part of compilation, and
+            // mixing it into `build` would make every ordinary build slow.
+            "label": "configure clang-tidy",
+            "detail": "cmake -B build-lint (clang-tidy on, tests off — as in CI)",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-B",
+                "build-lint",
+                "-S",
+                ".",
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DSTGX_BUILD_TESTS=OFF",
+                "-DSTGX_ENABLE_CLANG_TIDY=ON"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared",
+                "clear": true
+            }
+        },
+        {
+            "label": "clang-tidy",
+            "detail": "Lint the library sources",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build-lint",
+                "-j"
+            ],
+            "dependsOn": "configure clang-tidy",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true
+            }
+        },
+        {
+            "label": "wipe lint tree",
+            "detail": "Helper for \"clang-tidy (from scratch)\"",
+            "type": "shell",
+            "command": "rm",
+            "args": [
+                "-rf",
+                "build-lint"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared"
+            }
+        },
+        {
+            // clang-tidy runs as part of a compile, so an up-to-date tree
+            // reports nothing. Wipe first to see every warning again.
+            "label": "clang-tidy (from scratch)",
+            "detail": "Re-lint everything, not just what changed",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build-lint",
+                "-j"
+            ],
+            "dependsOn": [
+                "wipe lint tree",
+                "configure clang-tidy"
+            ],
+            "dependsOrder": "sequence",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true
+            }
+        }
+    ]
+}

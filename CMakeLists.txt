@@ -8,11 +8,12 @@ project(libstgx
 
 include(cmake/ProjectSettings.cmake)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(STGX_BUILD_TESTS "Build unit tests" ON)
+option(STGX_BUILD_EXAMPLES "Build examples" OFF)
 option(STGX_ENABLE_CLANG_TIDY "Enable clang-tidy on stgx targets" OFF)
 
 # --- dependencies -----------------------------------------------------------
@@ -40,7 +41,7 @@ target_link_libraries(stgx
     yaml-cpp::yaml-cpp
 )
 
-target_compile_features(stgx PUBLIC cxx_std_20)
+target_compile_features(stgx PUBLIC cxx_std_23)
 target_compile_options(stgx PRIVATE -Wall -Wextra -Wpedantic)
 
 if(STGX_ENABLE_CLANG_TIDY)
@@ -55,6 +56,13 @@ if(STGX_ENABLE_CLANG_TIDY)
   set_target_properties(stgx PROPERTIES
     CXX_CLANG_TIDY "${CLANG_TIDY_EXE};--config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy"
   )
+endif()
+
+
+# --- examples ---------------------------------------------------------------
+
+if(STGX_BUILD_EXAMPLES)
+  add_subdirectory(examples)
 endif()
 
 
