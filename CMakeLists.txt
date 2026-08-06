@@ -16,7 +16,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(STGX_BUILD_TESTS "Build unit tests" ${PROJECT_IS_TOP_LEVEL})
-option(STGX_BUILD_EXAMPLES "Build examples" OFF)
+option(STGX_BUILD_EXAMPLES "Build examples" ${PROJECT_IS_TOP_LEVEL})
 option(STGX_ENABLE_CLANG_TIDY "Enable clang-tidy on stgx targets" OFF)
 set(STGX_CLANG_TIDY "" CACHE STRING "clang-tidy executable to use (name or full path)")
 

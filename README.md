@@ -14,10 +14,6 @@ validating state-transition graphs of schedules for real-time systems.
 
 ---
 
-libstgx reads and writes the YAML that
-[state-graph-visualizer](https://github.com/peplxx/state-graph-visualizer) renders, and is the
-source of truth for that format — it validates stricter than the viewer does.
-
 
 ## Add to project
 
@@ -59,7 +55,7 @@ taken from the system if present, otherwise fetched.
 | Option | Default | |
 |---|---|---|
 | `STGX_BUILD_TESTS` | on for a top-level build, off as a subproject | build the Catch2 test binary |
-| `STGX_BUILD_EXAMPLES` | `OFF` | build the two example programs |
+| `STGX_BUILD_EXAMPLES` | on for a top-level build, off as a subproject | build the example programs |
 | `STGX_ENABLE_CLANG_TIDY` | `OFF` | run clang-tidy over the library sources |
 
 ## Graphs and the visualizer format
