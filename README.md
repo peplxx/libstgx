@@ -44,12 +44,13 @@ There is no `install()` / `find_package(stgx)` yet — both routes above go thro
 ## Building the library itself
 
 ```bash
-cmake -B build -S . -DCMAKE_BUILD_TYPE=Debug
+cmake --preset default
 cmake --build build -j
 ctest --test-dir build --output-on-failure
 ```
 
-CMake 3.21+ and a C++23 compiler (Apple Clang 17, GCC 13, Clang 17). Catch2 v3 is used for tests —
+Requires CMake 3.21+, Ninja, and a C++23 compiler
+(Apple Clang 17, GCC 13, Clang 17). Catch2 v3 is used for tests —
 taken from the system if present, otherwise fetched.
 
 | Option | Default | |
